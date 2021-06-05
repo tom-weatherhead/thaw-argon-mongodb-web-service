@@ -1,0 +1,100 @@
+# mongoweb.service - MongoDB Web service
+
+# Caveat: Replace all occurrences of the placeholders <username> and <groupname> with valid values.
+
+# Node.js app as an Ubuntu service: See https://gist.github.com/learncodeacademy/3a96aa1226c769adba39
+# See also https://hackernoon.com/making-node-js-service-always-ali ve-on-ubuntu-server-e20c9c0808e4
+
+# Install Node.js system-wide:
+# From http://www.marcominetti.net/personal/blog/2015/09/install-system-wide-node-js-with-nvm-the-painless-way :
+
+# $ sudo -i
+
+# Fetch and execute nvm setup script:
+# (Consult the nvm homepage at https://github.com/creationix/nvm to determine the current version of nvm, then substitute the version number in the curl URL below.)
+
+# # mkdir /usr/local/nvm
+# # curl https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | NVM_DIR=/usr/local/nvm PROFILE=/etc/bash.bashrc bash
+
+# Close the terminal window, then open a new one.
+
+# $ sudo -i
+
+# # nvm install node
+
+# Create node executable:
+
+# # echo "#\!/bin/bash
+#	export NVM_DIR=\"/usr/local/nvm\"
+#	[ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\"
+#	node \$@" > /usr/local/bin/node
+
+# # chmod +x /usr/local/bin/node
+
+# Create npm executable:
+
+# echo "#\!/bin/bash
+#	export NVM_DIR=\"/usr/local/nvm\"
+#	[ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\"
+#	npm \$@" > /usr/local/bin/npm
+
+# # chmod +x /usr/local/bin/npm
+
+# # mkdir -p /usr/local/git/sandbox/mongoweb
+# # chown -R <username>:<groupname> /usr/local/git/sandbox/mongoweb
+# # su - <username>
+# $ git clone http://felicity:8080/git/mongoweb.git /usr/local/git/sandbox/mongoweb
+# $ cd /usr/local/git/sandbox/mongoweb
+# $ npm i
+# $ npm run build
+# $ exit
+
+# # cd /etc/systemd/system
+# # cp /usr/local/git/sandbox/mongoweb/service/systemd/mongoweb.service .
+# # chmod -x mongoweb.service
+# # systemctl daemon-reload
+# # systemctl enable mongoweb
+# # systemctl start mongoweb
+# # systemctl status mongoweb
+# # exit
+
+# From https://hackernoon.com/making-node-js-service-always-alive-on-ubuntu-server-e20c9c0808e4 :
+
+# To view the service's logs:
+# sudo journalctl -u mongoweb.service
+
+# For real time logs, just add the -f argument:
+# sudo journalctl -fu mongoweb.service
+
+# TODO? : Create a user named "mongoweb" and use it to run this service?
+# E.g. John T.'s comment:
+# Step 1) # useradd -M --shell /bin/false mongoweb
+# --- "-M" ensures that no home directory will be created for that user
+# Step 2) # usermod -L mongoweb
+# --- "usermod -M" locks the account to prevent logging in
+# E.g. rynop's comment: # useradd -r -s /bin/false mongoweb (or? : # useradd -r --shell /bin/false mongoweb)
+# - "-r" or "--system" creates a system user - one which does not have a password or a home dir, and is unable to login.
+# - "-s /bin/false" disables the shell for that user
+# ? Use "/bin/nologin" or "/sbin/nologin" as the shell instead of "/bin/false" ?
+# See https://superuser.com/questions/77617/how-can-i-create-a-non-login-user
+
+# Allow non-root process to bind to port 80 and 443?
+# See https://superuser.com/questions/710253/allow-non-root-process-to-bind-to-port-80-and-443
+# I.e. : sudo setcap CAP_NET_BIND_SERVICE=+eip /path/to/binary
+# ... where the binary would presumably be "node", either /usr/local/sbin/node or e.g. /usr/local/nvm/versions/node/v11.10.0/bin/node. The binary must not be a symlink.
+
+###
+
+[Unit]
+Description=MongoDB REST API Web Service
+Wants=mongodb.service
+After=mongodb.service
+
+[Service]
+ExecStart=/bin/bash -c 'node /usr/local/git/sandbox/mongoweb/lib/main.js'
+Restart=always
+User=root
+# User=mongoweb # ThAW 2019-02-23 : This works after proper config, but it responds to requests very slowly.
+
+[Install]
+WantedBy=multi-user.target

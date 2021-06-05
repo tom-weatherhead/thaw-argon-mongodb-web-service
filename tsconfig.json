@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"lib": [
+			"es2015"
+		],
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"noImplicitThis": false,
+		"outDir": "./dist",
+		"sourceMap": false,
+		"strict": true,
+		"target": "es5",
+		"types": [
+			"node"
+		]
+	},
+	"files": [
+		"src/main.ts"
+	]
+}

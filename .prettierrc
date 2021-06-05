@@ -1,0 +1,9 @@
+{
+	"endOfLine": "crlf",
+	"printWidth": 80,
+	"quoteProps": "consistent",
+	"singleQuote": true,
+	"tabWidth": 4,
+	"trailingComma": "none",
+	"useTabs": true
+}

@@ -1,0 +1,96 @@
+{
+	"name": "thaw-argon-mongodb-web-service",
+	"version": "0.0.0",
+	"description": "A MongoDB Node.js HTTP server intended for WINDOWS XP ONLY.",
+	"keywords": [
+		"Argon",
+		"database",
+		"MongoDB",
+		"TypeScript",
+		"Web service",
+		"Windows XP"
+	],
+	"private": false,
+	"homepage": "https://github.com/tom-weatherhead/thaw-argon-mongodb-web-service#readme",
+	"repository": "github:tom-weatherhead/thaw-argon-mongodb-web-service",
+	"bugs": {
+		"url": "https://github.com/tom-weatherhead/thaw-argon-mongodb-web-service/issues"
+	},
+	"main": "dist/main.js",
+	"types": "dist/main.d.ts",
+	"files": [
+		"dist/**/*"
+	],
+	"bin": {},
+	"man": [],
+	"directories": {
+		"// lib": "lib",
+		"// bin": "It is an error to specify both bin and directories.bin",
+		"man": "man",
+		"// doc": "Put markdown files in the directories.doc directory",
+		"doc": "doc",
+		"example": "examples",
+		"test": "test"
+	},
+	"scripts": {
+		"all": "npm i && npm run prettier-format && npm run build-and-test",
+		"re": "rm -rf dist && npm run prettier-format && npm run build-and-test",
+		"rebuild-offline": "npm run clean-offline && npm run build-and-test",
+		"clean": "rm -rf dist && rm -rf node_modules",
+		"clean-offline": "rmdir /Q /S dist",
+		"// build-and-test": "npm run prettier-check && npm run lint && npm run build && npm test",
+		"build-and-test": "npm run prettier-check && npm run lint && npm run build",
+		"prettier-check": "prettier --check \"src/**/*.ts\" \"test/**/*.js\"",
+		"prettier-format": "prettier --write \"src/**/*.ts\" \"test/**/*.js\"",
+		"lint": "eslint src test",
+		"build": "tsc",
+		"// test": "nodeunit test",
+		"loc": "git ls-files -z *.ts | xargs -0 wc -l",
+		"test-post": "curl -v --header \"Content-Type: application/json\" --request POST --data '{\"key1\":\"value1\"}' http://localhost:8080/testdb/testcoll",
+		"start": "node dist\\main.js",
+		"start-posix": "node dist/main.js"
+	},
+	"config": {
+		"deploy_target_dir": "$NPM_PKG_DIR"
+	},
+	"publishConfig": {},
+	"dependencies": {
+		"thaw-argon-promisified-mongodb": "^0.0.0"
+	},
+	"devDependencies": {
+		"@types/mongodb": "<2",
+		"@types/node": "<5",
+		"eslint": "<5",
+		"prettier": "<2",
+		"typescript": "^4.3.2"
+	},
+	"peerDependencies": {},
+	"// bundledDependencies is an array of package names": true,
+	"// The name bundleDependencies is also honoured": true,
+	"bundledDependencies": [],
+	"optionalDependencies": {},
+	"engines": {
+		"node": "4.9.1"
+	},
+	"os": [
+		"darwin",
+		"linux",
+		"win32"
+	],
+	"cpu": [
+		"ia32",
+		"x64"
+	],
+	"author": "Tom Weatherhead <thaw@2hrd4u.org> (https://github.com/tom-weatherhead)",
+	"contributors": [
+		"Anonymous <conspirator@deep.state.gov>",
+		"Assimilated Captain <locutus@b.org>",
+		"Austin James <president@warehouse.serendip.com>",
+		"Autonomous Weapons Systems Unlimited <killer@robots.com>",
+		"Buddy Guy <deadbeef@decafbad.gov>",
+		"Deprecated <deadc0de@obso1337.org>",
+		"Loitering Munition <smart@bom.com>",
+		"Sgt. Pepper <shoot1st@thinkl8r.mil>"
+	],
+	"license": "MIT"
+}
